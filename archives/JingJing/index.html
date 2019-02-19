@@ -1,15 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">    
-    <title>Hello World | QinHo Zone</title>
+<meta charset="utf-8">
+<title>ForJingJing</title>
 </head>
+
+<script>
+    function calc()
+    {
+    	var form = myform;
+    	var dollar = parseFloat(form.dollar.value);
+
+    	var price = parseFloat(form.price.value);
+    	var discount = parseFloat(form.discount.value);
+    	var returnPoint = parseFloat(form.returnPoint.value);
+
+    	var buyDollarValue = price * discount * 0.1 * (100 - returnPoint) * 0.01;
+    	document.getElementById("buyDollar").innerHTML = buyDollarValue.toFixed(2);
+
+    	var returnRMBValue = price * discount * 0.1 * returnPoint * 0.01 * dollar;
+    	document.getElementById("returnRMB").innerHTML = returnRMBValue.toFixed(2);
+
+    	var buyRMBValue = buyDollarValue * dollar;
+    	document.getElementById("buyRMB").innerHTML = buyRMBValue.toFixed(2);
+    }
+</script>
+
 <body>
+<!-- <p>代购折扣、返点、汇率计算</p> -->
 
-TEST
-JS
-INDEX
-HTML
-
+<!-- <h4>这个表格有一个标题，以及粗边框：</h4> -->
+<br/>
+<!-- <br/> -->
+<form name = myform>
+	美元汇率：<input type="text" name="dollar" value="6.7744" oninput="value=value.replace(/[^0-9.]/g,'')">（最好自己填入实时汇率)
+	<table border="1">
+	<caption>代购折扣、返点、汇率计算</caption>
+	<tr>
+		<td>原价</td>
+		<td>折扣</td>
+		<td>返点率</td>
+		<td>实际买入价格</td>
+		<td>返点的钱</td>
+		<td>实际买入价格</td>
+	</tr>
+	<tr>
+		<td>美元</td>
+		<td>填0-10的值）</td>
+		<td>填0-100的值</td>
+		<td>美元</td>
+		<td>RMB</td>
+		<td>RMB</td>
+	</tr>
+	<tr>
+		<td><input type="text" name="price" value="100" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
+		<td><input type="text" name="discount" value="9.5" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
+		<td><input type="text" name="returnPoint" value="16" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
+		<td><label id="buyDollar">0</label></td>
+		<td><label id="returnRMB">0</label></td>
+		<td><label id="buyRMB">0</label></td>
+	</tr>
+	</table>
+	<br>
+	<br>
+	<input type="button" value="计算" onclick="javascript:calc()">
+</form>
 </body>
 </html>
+
