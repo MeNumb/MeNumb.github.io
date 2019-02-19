@@ -40,30 +40,41 @@
 		<td>原价</td>
 		<td>折扣</td>
 		<td>返点率</td>
+	</tr>
+	<tr>
+		<td>美元</td>
+		<td>填0-10的值）</td>
+		<td>填0-100的值</td>
+	</tr>
+	<tr>
+		<td><input type="text" name="price" value="100" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
+		<td><input type="text" name="discount" value="9.5" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
+		<td><input type="text" name="returnPoint" value="16" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
+	</tr>
+	</table>
+	<br>
+	<br>
+	<input type="button" value="计算" onclick="javascript:calc()">
+	<br>
+	<br>
+	<table border="1">
+	<caption>计算结果</caption>
+	<tr>
 		<td>实际买入价格</td>
 		<td>返点的钱</td>
 		<td>实际买入价格</td>
 	</tr>
 	<tr>
 		<td>美元</td>
-		<td>填0-10的值）</td>
-		<td>填0-100的值</td>
-		<td>美元</td>
 		<td>RMB</td>
 		<td>RMB</td>
 	</tr>
 	<tr>
-		<td><input type="text" name="price" value="100" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
-		<td><input type="text" name="discount" value="9.5" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
-		<td><input type="text" name="returnPoint" value="16" oninput="value=value.replace(/[^0-9.]/g,'')"></td>
 		<td><label id="buyDollar">0</label></td>
 		<td><label id="returnRMB">0</label></td>
 		<td><label id="buyRMB">0</label></td>
 	</tr>
 	</table>
-	<br>
-	<br>
-	<input type="button" value="计算" onclick="javascript:calc()">
 </form>
 </body>
 </html>
