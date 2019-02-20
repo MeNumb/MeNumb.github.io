@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>ForJingJing</title>
+	<meta charset="utf-8">
+<!--防止手机页面缩放-->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"> -->
+<title>静静专用</title>
 </head>
 
 <script>
@@ -15,31 +17,82 @@
     	var discount = parseFloat(form.discount.value);
     	var returnPoint = parseFloat(form.returnPoint.value);
 
-    	var buyDollarValue = price * discount * 0.1 * (100 - returnPoint) * 0.01;
-    	document.getElementById("buyDollar").innerHTML = buyDollarValue.toFixed(2);
+    	//折后价格
+    	var priceDiscount = price * discount * 0.1;
 
-    	var returnRMBValue = price * discount * 0.1 * returnPoint * 0.01 * dollar;
+    	var discountDollarValue = priceDiscount
+    	document.getElementById("discountDollar").innerHTML = discountDollarValue.toFixed(2);
+    	var discountRMBValue = priceDiscount * dollar
+    	document.getElementById("discountRMB").innerHTML = discountRMBValue.toFixed(2);
+
+
+    	//返点钱
+    	var returnDollarValue = priceDiscount * returnPoint * 0.01;
+    	document.getElementById("returnDollar").innerHTML = returnDollarValue.toFixed(2);
+    	var returnRMBValue = returnDollarValue * dollar;
     	document.getElementById("returnRMB").innerHTML = returnRMBValue.toFixed(2);
 
+    	//美元实际买入价格
+    	var buyDollarValue = priceDiscount * (100 - returnPoint) * 0.01;
+    	document.getElementById("buyDollar").innerHTML = buyDollarValue.toFixed(2);
     	var buyRMBValue = buyDollarValue * dollar;
     	document.getElementById("buyRMB").innerHTML = buyRMBValue.toFixed(2);
     }
+
+    'use strict';
+
+	/**
+	 * @param {Boolean} [normal = false] - 默认开启页面压缩以使页面高清;  
+	 * @param {Number} [baseFontSize = 100] - 基础fontSize, 默认100px;
+	 * @param {Number} [fontscale = 1] - 有的业务希望能放大一定比例的字体;
+	 */
+	const win = window;
+	export default win.flex = (normal, baseFontSize, fontscale) => {
+	  const _baseFontSize = baseFontSize || 100;
+	  const _fontscale = fontscale || 1;
+
+	  const doc = win.document;
+	  const ua = navigator.userAgent;
+	  const matches = ua.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i);
+	  const UCversion = ua.match(/U3\/((\d+|\.){5,})/i);
+	  const isUCHd = UCversion && parseInt(UCversion[1].split('.').join(''), 10) >= 80;
+	  const isIos = navigator.appVersion.match(/(iphone|ipad|ipod)/gi);
+	  let dpr = win.devicePixelRatio || 1;
+	  if (!isIos && !(matches && matches[1] > 534) && !isUCHd) {
+	    // 如果非iOS, 非Android4.3以上, 非UC内核, 就不执行高清, dpr设为1;
+	    dpr = 1;
+	  }
+	  const scale = normal ? 1 : 1 / dpr;
+
+	  let metaEl = doc.querySelector('meta[name="viewport"]');
+	  if (!metaEl) {
+	    metaEl = doc.createElement('meta');
+	    metaEl.setAttribute('name', 'viewport');
+	    doc.head.appendChild(metaEl);
+	  }
+	  metaEl.setAttribute('content', `width=device-width,user-scalable=no,initial-scale=${scale},maximum-scale=${scale},minimum-scale=${scale}`);
+	  doc.documentElement.style.fontSize = normal ? '50px' : `${_baseFontSize / 2 * dpr * _fontscale}px`;
+	};
 </script>
-
+<style>
+	div{background:url(bg2.jpg) no-repeat;width:100%;height:auto;background-size:cover;}
+</style>
 <body>
-<!-- <p>代购折扣、返点、汇率计算</p> -->
+<div id="Layer1" style="position:fixed; left:0px; top:0px; width:100%; height:100%">  
+<!-- <img src="bg.jpg" width="100%" height="100%"/> -->
 
-<!-- <h4>这个表格有一个标题，以及粗边框：</h4> -->
-<br/>
-<!-- <br/> -->
 <form name = myform>
-	美元汇率：<input type="text" name="dollar" value="6.7744" oninput="value=value.replace(/[^0-9.]/g,'')">（最好自己填入实时汇率)
-	<table border="1">
+	<br>
+	<br>
+	<p>美元汇率：<input type="text" name="dollar" value="6.7744" oninput="value=value.replace(/[^0-9.]/g,'')">（最好自己填入实时汇率)</p>
+	<br>
+	<table border="1" cellpadding="5">
 	<caption>代购折扣、返点、汇率计算</caption>
 	<tr>
 		<td>原价</td>
 		<td>折扣</td>
 		<td>返点率</td>
+
 	</tr>
 	<tr>
 		<td>美元</td>
@@ -57,25 +110,29 @@
 	<input type="button" value="计算" onclick="javascript:calc()">
 	<br>
 	<br>
-	<table border="1">
+	<table border="1" width="400" cellpadding="5">
 	<caption>计算结果</caption>
 	<tr>
-		<td>实际买入价格</td>
+		<td></td>
+		<td>折后价格</td>
 		<td>返点的钱</td>
 		<td>实际买入价格</td>
 	</tr>
 	<tr>
 		<td>美元</td>
-		<td>RMB</td>
-		<td>RMB</td>
+		<td><label id="discountDollar">0</label></td>
+		<td><label id="returnDollar">0</label></td>
+		<td><label id="buyDollar">0</label></td>
 	</tr>
 	<tr>
-		<td><label id="buyDollar">0</label></td>
+		<td>RMB</td>
+		<td><label id="discountRMB">0</label></td>
 		<td><label id="returnRMB">0</label></td>
 		<td><label id="buyRMB">0</label></td>
 	</tr>
 	</table>
 </form>
+</div>
 </body>
 </html>
 
