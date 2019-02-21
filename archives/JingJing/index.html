@@ -19,29 +19,67 @@
     	}
 
     	var price = parseFloat(form.price.value);
-    	var discount = parseFloat(form.discount.value);
-    	var returnPoint = parseFloat(form.returnPoint.value);
+    	var discount = parseFloat(form.discount.value) * 0.1;
+    	var returnPoint = parseFloat(form.returnPoint.value) * 0.01;
 
     	//折后价格
-    	var priceDiscount = price * discount * 0.1;
-
+    	var priceDiscount = price * discount;
     	var discountMoneyValue = priceDiscount
     	document.getElementById("discountMoney").innerHTML = discountMoneyValue.toFixed(2);
     	var discountRMBValue = priceDiscount * exchangeRate
     	document.getElementById("discountRMB").innerHTML = discountRMBValue.toFixed(2);
 
+    	document.getElementById("discountMoneyPlane").innerHTML = discountMoneyValue.toFixed(2);
+    	var discountRMBValue = priceDiscount * exchangeRate
+    	document.getElementById("discountRMBPlane").innerHTML = discountRMBValue.toFixed(2);
 
-    	//返点钱
-    	var returnMoneyValue = priceDiscount * returnPoint * 0.01;
+  		// 原价m   
+		// 折扣d
+		// 返点r
+		// d={0-1}
+		// r={0-1}
+
+		// 普通返点公式：m*d*r
+		// 即：原价*折扣*返点比例
+
+		// 机场返点公式：m*r-m*(1-d)=m*(r+d-1)
+		// 即：原价*返点 - 原价*（1-折扣）
+
+
+
+    	//普通返点钱
+    	var returnMoneyValue = priceDiscount * returnPoint;
     	document.getElementById("returnMoney").innerHTML = returnMoneyValue.toFixed(2);
     	var returnRMBValue = returnMoneyValue * exchangeRate;
     	document.getElementById("returnRMB").innerHTML = returnRMBValue.toFixed(2);
 
-    	//实际买入价格
-    	var buyMoneyValue = priceDiscount * (100 - returnPoint) * 0.01;
+    	//普通实际买入价格
+    	var buyMoneyValue = priceDiscount * (1 - returnPoint);
     	document.getElementById("buyMoney").innerHTML = buyMoneyValue.toFixed(2);
     	var buyRMBValue = buyMoneyValue * exchangeRate;
     	document.getElementById("buyRMB").innerHTML = buyRMBValue.toFixed(2);
+
+    	//普通返点率
+    	var returnPerValue = discount * returnPoint;
+    	document.getElementById("retrunPer").innerHTML = returnPerValue.toFixed(4);
+    	document.getElementById("returnPerRMB").innerHTML = returnPerValue.toFixed(4);
+
+    	//机场返点钱
+		var returnMoneyValuePlane = price * (returnPoint + discount - 1);
+    	document.getElementById("returnMoneyPlane").innerHTML = returnMoneyValuePlane.toFixed(2);
+    	var returnRMBValuePlane = returnMoneyValuePlane * exchangeRate;
+    	document.getElementById("returnRMBPlane").innerHTML = returnRMBValuePlane.toFixed(2);
+
+    	//机场实际买入价格
+    	var buyMoneyValuePlane = priceDiscount - returnMoneyValuePlane;
+    	document.getElementById("buyMoneyPlane").innerHTML = buyMoneyValuePlane.toFixed(2);
+    	var buyRMBValuePlane = buyMoneyValuePlane * exchangeRate;
+    	document.getElementById("buyRMBPlane").innerHTML = buyRMBValuePlane.toFixed(2);
+
+    	//机场返点率
+    	var returnPerValuePlane = discount + returnPoint - 1;
+    	document.getElementById("retrunPerPlane").innerHTML = returnPerValuePlane.toFixed(4);
+    	document.getElementById("returnPerRMBPlane").innerHTML = returnPerValuePlane.toFixed(4);    	
     }
 
     function selectMoney()
@@ -52,12 +90,14 @@
         	isDollar = true;
         	document.getElementById("moneyType1").innerHTML = "美元";
         	document.getElementById("moneyType2").innerHTML = "美元";
+        	document.getElementById("moneyType3").innerHTML = "美元";
         }
         if(value == "korea")
         {
         	isDollar = false;
         	document.getElementById("moneyType1").innerHTML = "韩元";
         	document.getElementById("moneyType2").innerHTML = "韩元";
+        	document.getElementById("moneyType3").innerHTML = "韩元";
         }
 	}
 	function getMoneyType() 
@@ -112,24 +152,53 @@
 			<br>
 			<br>
 			<table border="1" width="400" cellpadding="5">
-			<caption>计算结果</caption>
+			<caption>普通返点计算结果</caption>
 			<tr>
 				<td></td>
 				<td>折后价格</td>
 				<td>返点的钱</td>
 				<td>实际买入价格</td>
+				<td>返点率</td>
 			</tr>
 			<tr>
 				<td><label id="moneyType2">美元</label></td>
 				<td><label id="discountMoney">0</label></td>
 				<td><label id="returnMoney">0</label></td>
 				<td><label id="buyMoney">0</label></td>
+				<td><label id="retrunPer">0</label></td>
 			</tr>
 			<tr>
 				<td>RMB</td>
 				<td><label id="discountRMB">0</label></td>
 				<td><label id="returnRMB">0</label></td>
 				<td><label id="buyRMB">0</label></td>
+				<td><label id="returnPerRMB">0</label></td>
+			</tr>
+			</table>
+			<br>
+			<br>
+			<table border="1" width="400" cellpadding="5">
+			<caption>机场返点计算结果</caption>
+			<tr>
+				<td></td>
+				<td>折后价格</td>
+				<td>返点的钱</td>
+				<td>实际买入价格</td>
+				<td>返点率</td>
+			</tr>
+			<tr>
+				<td><label id="moneyType3">美元</label></td>
+				<td><label id="discountMoneyPlane">0</label></td>
+				<td><label id="returnMoneyPlane">0</label></td>
+				<td><label id="buyMoneyPlane">0</label></td>
+				<td><label id="retrunPerPlane">0</label></td>
+			</tr>
+			<tr>
+				<td>RMB</td>
+				<td><label id="discountRMBPlane">0</label></td>
+				<td><label id="returnRMBPlane">0</label></td>
+				<td><label id="buyRMBPlane">0</label></td>
+				<td><label id="returnPerRMBPlane">0</label></td>
 			</tr>
 			</table>
 		</form>
